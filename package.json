@@ -1,0 +1,35 @@
+{
+  "name": "attendance_management",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000A\u0000t\u0000t\u0000e\u0000n\u0000d\u0000a\u0000n\u0000c\u0000e\u0000_\u0000m\u0000a\u0000n\u0000a\u0000g\u0000e\u0000m\u0000e\u0000n\u0000t\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeevarekamahalingam/Attendance_management.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeevarekamahalingam/Attendance_management/issues"
+  },
+  "homepage": "https://github.com/jeevarekamahalingam/Attendance_management#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3",
+    "pg": "^8.14.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.10",
+    "@types/node-cron": "^3.0.11",
+    "@types/pg": "^8.11.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
