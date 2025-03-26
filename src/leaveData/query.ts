@@ -47,9 +47,9 @@ export const getALeaveInfoOfAUserquery=`
                 select 
                     l.title as "title",
                     l.leave_type as "leaveType", 
-                    concat(to_char(l.start_date,'Mon DD YYY'),'-',to_char(l.end_date,'Mon DD YYYY')) as "dateRange",
+                    concat(to_char(l.start_date,'Mon DD, YYY'),'-',to_char(l.end_date,'Mon DD, YYYY')) as "dateRange",
                     l.reason,
-                    to_char(l.applied_date,'Mon DD YYYY') as "appliedOn",
+                    to_char(l.applied_date,'Mon DD, YYYY') as "appliedOn",
                     u.phone_no as "contactNumber",
                     u.leave_pending as "leaveBalance" 
                     from 

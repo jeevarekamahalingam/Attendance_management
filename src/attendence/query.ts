@@ -8,7 +8,7 @@ values($1,$2,$3)`;
 export const checkoutQuery='update attendence set checkout=$1 where user_uuid=$2 and date_=$3';
 export const getTotalAttendenceDetailQuery=`
         select 
-            to_char(date_,'Mon DD YYYY') as "date", 
+            to_char(date_,'Mon DD, YYYY') as "date", 
             to_char(checkin,'HH12:MI AM') as "checkIn" ,
             to_char(checkout,'HH12:MI AM')   as "checkOut" 
             from attendence 
