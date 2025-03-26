@@ -1,5 +1,18 @@
-export interface WorkingDayEntry {
-    Year: number;
-    Month: number;
-    WorkingDays: number;
+export enum Month {
+    January = 'January',
+    February = 'February',
+    March = 'March',
+    April = 'April',
+    May = 'May',
+    June = 'June',
+    July = 'July',
+    August = 'August',
+    September = 'September',
+    October = 'October',
+    November = 'November',
+    December = 'December'
+  }
+  
+  export interface WorkingDaysRecord {
+    [key: string]: number; 
   }

@@ -26,10 +26,9 @@ export interface User {
     last_name: string;
     user_name: string; 
     role_id:number;
-    password:string;
     address:string;
     phone_no:string;
     department:string;
-    reporting_manager_id?: number; 
+    reporting_manager_uuid?: number; 
   }
   

@@ -1,5 +1,5 @@
 import { RequestHandler, Router } from "express";
-import {isUUIDpresent , getUserDetail,getTeamMembers,createUser } from "./controller";
+import {isUUIDpresent , getUserDetail,getTeamMembers,createUser,getLeaveStatForAUser } from "./controller";
 
 const isUUIDpresentHandler:RequestHandler =async (req,res, next) => {
     try {
@@ -11,10 +11,10 @@ const isUUIDpresentHandler:RequestHandler =async (req,res, next) => {
 
 const getUserDetailHandler:RequestHandler=async(req,res,next)=>{
     try{
-        const data = await getUserDetail(req,res);
-        res.send(data);
+       await getUserDetail(req,res);
     }
     catch(error){
+        console.log(error);
         next(error);
     }
 }
@@ -35,6 +35,13 @@ const createNewUser:RequestHandler=async(req,res,next)=>{
         next(error);
       }
 }
+const getLeaveStatForAUserRequestHandler:RequestHandler =async (req,res, next) => {
+    try {
+        await getLeaveStatForAUser(req,res);
+    } catch (error) {
+        next(error);
+    }
+};
 const userRoute = Router();
 
 
@@ -42,6 +49,8 @@ userRoute.get("/userExitCheck/:uuid",isUUIDpresentHandler);
 userRoute.get("/userData/:uuid",getUserDetailHandler);
 userRoute.get("/teammembers/:user_name", retriveTeamMembers);
 userRoute.post("/createUser",createNewUser);
+userRoute.get('/getLeaveStatForAUser/:uuid_',getLeaveStatForAUserRequestHandler)
+
 
 
 export default userRoute;
