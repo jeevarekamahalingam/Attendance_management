@@ -1,9 +1,10 @@
 import pool from '../db';
-import {countAttendence,checkIncheckoutDataQuery,toInsertValueToAttendenceTable,checkoutQuery,getTotalAttendenceDetailQuery} from './query'
+import {countAttendence,checkIncheckoutDataQuery,toInsertValueToAttendenceTable,checkoutQuery,getAttendenceDetailQuery} from './query'
 import {Request, Response} from 'express'
 import fs from'fs';
 import path from 'path';
 import {checkinCheckoutDateReq} from './types' 
+import {getApprovedLeaveQuery} from '../leaveData/query'
 
 export const getAttendenceCount=async(req:Request,res:Response)=>{
     try{
@@ -103,8 +104,14 @@ export const checkOut=async(req:Request,res:Response)=>{
 export const getTotalAttendenceDetail=async(req:Request,res:Response)=>{
     try{
         const {user_uuid}=req.params;
-        const{rows}=await pool.query(getTotalAttendenceDetailQuery,[user_uuid]);
-        return res.status(200).json({data:rows});
+        const PresentDates=await pool.query(getAttendenceDetailQuery,[user_uuid]);
+        const PreviusLeave=await pool.query(getApprovedLeaveQuery,[user_uuid]);
+        const TotalAttendence=[...PresentDates.rows,...PreviusLeave.rows];
+        TotalAttendence.sort((record1,record2)=>{
+            return new Date(record2.date).getTime() - new Date(record1.date).getTime();
+        })
+        console.log(TotalAttendence);
+        return res.status(200).json({data:TotalAttendence});
     }
     catch(error){
         console.error("Error creating user:", error);

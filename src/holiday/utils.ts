@@ -29,7 +29,6 @@ export const calculateHolidaysOfMonth = async (month: number): Promise<number> =
 
 const filePath = path.join(__dirname, '../workingDays.json');
 
-// ✅ Updated with strong typing
 export const appendToJsonFile = (newData: WorkingDaysRecord): void => {
   let existingData: WorkingDaysRecord[] = [];
 

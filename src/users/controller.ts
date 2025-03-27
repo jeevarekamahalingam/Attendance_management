@@ -4,27 +4,50 @@ import {isUUIDpresentQuery ,
   getRoleNameQuery,
   getUserData,
   getReportingManager,
-  getRoleID,
   getUsersByManagerQuery,
   createUserQuery,
-  getLeaveStatForAUserquery } from "./queries";
-import { User } from "./types";
+  getLeaveStatForAUserquery,
+  getListOfReportingManagersQuery,
+  updateUsersQuery } from "./queries";
+import { User,userEditData } from "./types";
 
 export const isUUIDpresent=async(req:Request,res:Response)=>{
   try {
     const { uuid } = req.params;
+
     if (!uuid) {
-        return res.status(400).json({ error: "UUID is required" });
+        return {
+          error:true,
+          code:400,
+          message:"uuid is required",
+        }
     }
-    const query = isUUIDpresentQuery;
-    const { rows } = await pool.query(query, [uuid]);
+
+    const { rows } = await pool.query(isUUIDpresentQuery, [uuid]);
+
     if (rows.length === 0) {
-        return res.status(404).json({ error: "User does not exist" });
+        return {
+          error:true,
+          code:404,
+          message:"User not found"
+        }
     }
-    return res.status(200).json({ message: "User exists" });
-  } catch (error) {
+
+    return{
+      error:false,
+      code:200,
+      message:"User exists"
+    }
+    
+  } 
+  catch (error) {
       console.error("Error checking UUID:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
+      return {
+        error:true,
+        code:500,
+         message: `Internal Server Error${error}`
+        
+      }
   }
 }
 
@@ -32,43 +55,96 @@ export const isUUIDpresent=async(req:Request,res:Response)=>{
 export const getUserDetail=async(req:Request,res:Response)=>{
   try{
     const {uuid}=req.params;
+
     if (!uuid) {
-      return res.status(400).json({ error: "UUID is required" });
+      return{
+        error:true,
+        code:400,
+        message:"UUID is required"
+      }
     }
-    const query=getUserData;
-    const {rows}=await pool.query(query,[uuid]);
+
+    const {rows}=await pool.query(getUserData,[uuid]);
+
+    if (rows.length === 0) {
+      return {
+        error:true,
+        code:404,
+        message:"User not found"
+      }
+  }
+
+    //to get role name based on id and replacing in role_id
     const roleRes = await pool.query(getRoleNameQuery, [rows[0]["role_id"]]);
     rows[0]["role_id"]=roleRes.rows[0].role_name;
+
+    //to get reporting_manager_name
     const reportingManager = await pool.query(getReportingManager, [rows[0]["reporting_manager_uuid"]]);
-    rows[0]["reporting_manager_uuid"]=reportingManager.rows[0].names;
-    return res.status(200).json({ data: JSON.parse(JSON.stringify(rows[0])) });
+    rows[0]["reporting_manager_uuid"]=reportingManager?.rows[0]?.names?? null;
+
+    return{
+      error:false,
+      code:200,
+      message:"Retrived user data",
+      data:rows[0]      
+    }
   }
   catch (error) {
-    console.error("Error checking UUID:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error in retriving user data", error);
+    return{
+      error:true,
+      code:500,
+      message: `Internal Server Error${error}`
+    }
+  }
 }
-}
-export const getTeamMembers = async (req: Request) => {
-    const { user_name } = req.params;
 
-    if (!user_name) {
-        throw new Error("Manager email is required");
+
+export const getTeamMembers = async (req: Request) => {
+  try{
+    const { uuid } = req.params;
+
+    if (!uuid) {
+        return{
+          error:true,
+          code:400,
+          message:"uuid required"
+        }
     }
 
     const query = getUsersByManagerQuery();
-    const { rows } = await pool.query(query, [user_name]);
+    const { rows } = await pool.query(query, [uuid]);
 
     if (rows.length === 0) {
-        return { message: "No users found under this manager" };
+        return { 
+          error:true,
+          code:404,
+          message: "No users found under this manager" };
     }
 
-    return rows;
+    return {
+      error:false,
+      code:200,
+      message:"Retrived Team Members",
+      data:rows
+    }
+  }
+  catch(error){
+    console.error("Error in retriving team members data", error);
+    return{
+      error:true,
+      code:500,
+      message: `Internal Server Error${error}`
+    }
+  }
+    
 };
 
 
 export const createUser = async (req: Request, res: Response) => {
     try {
       const {
+        uuid_,
         employee_code,
         first_name,
         last_name,
@@ -78,27 +154,24 @@ export const createUser = async (req: Request, res: Response) => {
         phone_no,
         department,
         reporting_manager_uuid
-      }: User & { role_id: string } = req.body;
-      console.log(req.body);
+      }: User = req.body;
 
-      if (!employee_code || !first_name || !last_name || !user_name || !role_id || !department) {
-        return res.status(400).json({ error: "Missing required fields" });
+      if (!uuid_ ||!employee_code || !first_name || !last_name || !user_name || !role_id || !department|| !address || !phone_no ) {
+        return{
+          error:true,
+          code:400,
+          message:"Missing required fields"
+        }
       }
-  
-      const roleRes = await pool.query(getRoleID, [role_id]);
-
-      if (roleRes.rows.length === 0) {
-        return res.status(400).json({ error: `Role '${role_id}' does not exist.` });
-      }
-  
-      const role_numeric_id = roleRes.rows[0].id;
-  
+      
+      
       const values = [
+        uuid_,
         employee_code,
         first_name,
         last_name,
         user_name,
-        role_numeric_id,
+        role_id,
         address,
         phone_no,
         department,
@@ -107,10 +180,18 @@ export const createUser = async (req: Request, res: Response) => {
   
       const { rows } = await pool.query(createUserQuery, values);
   
-      return res.status(201).json({ message: "User created successfully", user: rows[0] });
+      return{
+        error:false,
+        code:201,
+        message:"User Created sucessfully",
+      }
     } catch (error) {
       console.error("Error creating user:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
+      return {
+        error:true,
+        code:500,
+        message: `Internal Server Error${error}`
+      }
     }
   };
 
@@ -118,37 +199,134 @@ export const createUser = async (req: Request, res: Response) => {
 export const updateUserByUser=async(req:Request,res:Response)=>{
     try{
         const {
-            address,
-            phone_no
-        }: User = req.body;
-        console.log(req.body);
-        // const values = [
+            uuid_,
+            ...attributes
+        }: userEditData = req.body;
+        if(!uuid_ && !attributes){
+          return {
+            error:true,
+            code:400,
+            message:"Missing required details"
+          }
+        }
+        const query=updateUsersQuery(attributes,uuid_);
+        const {rows}=await pool.query(query);
 
-        //     password ?? null,
-        //     address ?? null,
-        //     phone_no ?? null,
+        if(rows.length===0){
+          return{
+            error:true,
+            code:404,
+            message:"user not found"
+          }
+        }
+
+        return{
+          error:false,
+          code:201,
+          message:"User Updated sucessfully"
+        }
         
-        // ];
-        // const { rows } = await pool.query(createUserQuery, values);
-    
-        // return res.status(201).json({ message: "User created successfully", user: rows[0] });
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
+    } catch(error) {
+      console.error('Error updating user data:', error);
+      return {
+        error:true,
+        code:500,
+         message: `Internal Server Error${error}`
+      }
+  }
   
 }
+
+
+
+
+export const updateUserByHR=async(req:Request,res:Response)=>{
+  try{
+      const {
+          uuid_,
+          ...attributes
+      }: User = req.body;
+      if(!uuid_ && !attributes){
+        return {
+          error:true,
+          code:400,
+          message:"Missing required details"
+        }
+      }
+      const query=updateUsersQuery(attributes,uuid_);
+      const {rows}=await pool.query(query);
+
+      if(rows.length===0){
+        return{
+          error:true,
+          code:404,
+          message:"user not found"
+        }
+      }
+
+      return{
+        error:false,
+        code:201,
+        message:"User Updated sucessfully"
+      }
+      
+  } catch(error) {
+    console.error('Error updating user data:', error);
+    return {
+      error:true,
+      code:500,
+       message: `Internal Server Error${error}`
+    }
+}
+
+}
+
+
 export const getLeaveStatForAUser=async(req:Request,res:Response)=>{
   try{
       const {uuid_}=req.params;
       if(!uuid_){
-          return res.status(400).json({error:"Insufficient data"})
+          return {
+            error:true,
+            code:400,
+            message:"user id required"
+          }
       }
       const {rows}=await pool.query(getLeaveStatForAUserquery,[uuid_]);
-      return res.status(200).json({data: rows });
+
+
+      return {
+        error:false,
+        code:200,
+        message:"Leaves stats retrived for user",
+        data:rows}
   }
   catch(error) {
-      console.error('Error fetching checkin/checkout:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error fetching leave stat', error);
+      return {
+        error:true,
+        code:500,
+         message: `Internal Server Error${error}`
+      }
+  }
+}
+
+export const getListOfReportingManagers=async(req:Request,res:Response)=>{
+  try{
+    const{rows}=await pool.query(getListOfReportingManagersQuery);
+    return {
+      error:false,
+      code:200,
+      message:"List of reporting managers retrived",
+      data:rows
+    }
+  }
+  catch(error){
+    console.error(`Internal Server Error${error}`);
+    return {
+      error:true,
+      code:500,
+       message: `Internal Server Error${error}`
+    }
   }
 }
