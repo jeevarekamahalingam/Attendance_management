@@ -62,7 +62,6 @@ export const newCheckin=async(req:Request,res:Response)=>{
         const {
             date,
             uuid,
-            
         }:checkinCheckoutDateReq=req.body;
         if(!date || !uuid){
             return res.status(400).json({ error: 'parameters are required in the body' });
