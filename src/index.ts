@@ -2,15 +2,15 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import './holiday/jobs'; 
+import './attendence/jobs'
 import userRoutes from './users/routes'
 import attendenceRoute from "./attendence/routes";
 import leaveDataRoute from "./leaveData/routes";
 import holidayRoute from "./holiday/routes";
-
+import roleRoute from "./role/routes";
 // import { calculateWorkingDays,appendToJsonFile } from "./holiday/utils";
-// import { WorkingDaysRecord,Month } from "./holiday/type";
+
 dotenv.config();
-// import {calculateWorkingDays,appendToJsonFile} from './holiday/utils';
 const app = express();
 app.use(express.json());
 // app.use(cors());
@@ -18,6 +18,7 @@ app.use("/attendence/users", userRoutes);
 app.use('/attendence/attendence',attendenceRoute);
 app.use('/attendence/leave',leaveDataRoute);
 app.use('/attendence/holiday',holidayRoute);
+app.use('/attendence/roles',roleRoute);
 
 // const callOnce=async()=>{
 //   const today = new Date();

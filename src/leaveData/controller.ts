@@ -23,9 +23,11 @@ export const applyLeave = async (req: Request, res: Response) => {
       if (!user_uuid || !title || !leave_type || !start_date || !end_date || !reason ) {
         return res.status(400).json({ error: "Missing required fields" });
       }
-      let reportingManagerUuid=await pool.query(getReportingManagerByUserUUID,[user_uuid]);
 
+      
+      let reportingManagerUuid=await pool.query(getReportingManagerByUserUUID,[user_uuid]);
       reportingManagerUuid=reportingManagerUuid.rows[0].reporting_manager_uuid;
+
       const applied_on=new Date();
       const values = [
         user_uuid,
@@ -72,21 +74,21 @@ export const changeLeaveStatus=async(req:Request,res:Response)=>{
     try{
             const {
             id,
-            user_uuid,
             status
         }:leave=req.body;
-        if (!user_uuid || !id || !status) {
+        if (!id || !status) {
             return res.status(400).json({ error: "Missing required fields" });
         }
         const result=await pool.query(changeLeaveStatusQuery,[status,id]);
-        if (status==='approved'){
+        const user_uuid=result.rows[0].user_uuid;
+        if (status==="approved"){
             const leaveType=result.rows[0].leave_type;
             if(leaveType=='SL - 0.5'||leaveType=='AL - 0.5'|| leaveType.trim()=='CL - 0.5'){
                 await pool.query(halfLeaveQuery,[user_uuid]);
             }
             else{
                 let LeaveDuration=await pool.query(leaveDurationCalculationQuery,[id]);
-                LeaveDuration=LeaveDuration.rows[0].datedifference;         
+                LeaveDuration=LeaveDuration.rows[0].datedifference;      
                 await pool.query(updateLeaveDurationQuery,[user_uuid,LeaveDuration])
             }
             

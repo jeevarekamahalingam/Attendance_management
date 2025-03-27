@@ -1,0 +1,1 @@
+export const getRolesQuery=`select * from role`

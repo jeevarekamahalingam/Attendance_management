@@ -21,14 +21,20 @@ export enum DepartmentType {
     VP = "VP",
   }
 export interface User {
-    employee_code:string;
-    first_name: string;
-    last_name: string;
-    user_name: string; 
-    role_id:number;
-    address:string;
-    phone_no:string;
-    department:string;
+    uuid_:string,
+    employee_code?:string;
+    first_name?: string;
+    last_name?: string;
+    user_name?: string; 
+    role_id?:number;
+    address?:string;
+    phone_no?:string;
+    department?:string;
     reporting_manager_uuid?: number; 
   }
   
+  export interface userEditData{
+    uuid_:string;
+    address?:string;
+    phone_no?:string;
+  }

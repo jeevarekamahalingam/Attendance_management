@@ -24,3 +24,4 @@ export enum leaveType {
     APPROVED = 'approved',
     REJECTED = 'rejected'
   }
+  
