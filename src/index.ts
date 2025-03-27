@@ -8,6 +8,7 @@ import attendenceRoute from "./attendence/routes";
 import leaveDataRoute from "./leaveData/routes";
 import holidayRoute from "./holiday/routes";
 import roleRoute from "./role/routes";
+import expenseRoute from "./expense/routes";
 // import { calculateWorkingDays,appendToJsonFile } from "./holiday/utils";
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use('/attendence/attendence',attendenceRoute);
 app.use('/attendence/leave',leaveDataRoute);
 app.use('/attendence/holiday',holidayRoute);
 app.use('/attendence/roles',roleRoute);
+app.use('/attendence/expense',expenseRoute);
 
 // const callOnce=async()=>{
 //   const today = new Date();
