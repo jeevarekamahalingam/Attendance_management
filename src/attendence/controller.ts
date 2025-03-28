@@ -12,7 +12,12 @@ export const getAttendenceCount=async(req:Request,res:Response)=>{
         const query=countAttendence;
         const {rows}=await pool.query(query,[user_uuid]);
         if (rows.length==0){
-            res.status(404).json({message:'No data found'});
+            // res.status(404).json({message:'No data found'});
+            return{
+                error:true,
+                code:404,
+                message:"No data found"
+            }
         }
         const monthName = new Date().toLocaleString('default', { month: 'long' });
         
@@ -23,11 +28,22 @@ export const getAttendenceCount=async(req:Request,res:Response)=>{
         const workingDays = workingData[0][monthName];
     
         rows[0].workingDays = workingDays;
-        return res.status(200).json({ data: rows });
+        // return res.status(200).json({ data: rows });
+        return {
+            error:false,
+            code:200,
+            message:"retrived attendene data",
+            data:rows
+        }
     }
-    catch(err){
-        console.error(err);
-        return res.status(500).json({ error: "Internal Server Error" });
+    catch (error) {
+        console.error("Error checking UUID:", error);
+        return {
+          error:true,
+          code:500,
+           message: `Internal Server Error${error}`
+          
+        }
     }
 }
 
@@ -38,20 +54,35 @@ export const getCheckinCheckout=async(req:Request, res:Response)=>{
         uuid
     }:checkinCheckoutDateReq=req.body;
     if(!date || !uuid){
-        return res.status(400).json({ error: 'parameters are required in the body' });
-
+        return{
+            error:true,
+            code:400,
+            message:"Missing required fields"
+        }
 
     }
     const query=checkIncheckoutDataQuery;
     const {rows}=await pool.query(query,[date,uuid]);
-    if (rows.length === 0) {
-        return res.status(404).json({ message: 'No data found for this UUID and date' });
-      }
+    // if (rows.length === 0) {
+    //     return res.status(404).json({ message: 'No data found for this UUID and date' });
+    //   }
   
-      return res.status(200).json({ data: rows[0] });
-    } catch (error) {
-      console.error('Error fetching checkin/checkout:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+    //   return res.status(200).json({ data: rows[0] });
+      return{
+        error:false,
+        code:200,
+        message:rows.length!==0?"Retrived checkincheckout data":"No data found",
+        data:rows.length!==0?rows[0]:[]
+      }
+    } 
+    catch (error) {
+        console.error("Error checking UUID:", error);
+        return {
+          error:true,
+          code:500,
+           message: `Internal Server Error${error}`
+          
+        }
     }
     
 }
@@ -64,16 +95,29 @@ export const newCheckin=async(req:Request,res:Response)=>{
             uuid,
         }:checkinCheckoutDateReq=req.body;
         if(!date || !uuid){
-            return res.status(400).json({ error: 'parameters are required in the body' });
-    
+            return{
+                error:true,
+                code:400,
+                message:"Missing required fields"
+            }
         } 
         const timestamp=new Date();
         const query=toInsertValueToAttendenceTable;
         const {rows}=await pool.query(query,[uuid,date,timestamp]);
-        return res.status(201).json({ message: "Attendence recorded succesfully", user: rows[0] });
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
+        return {
+            error:false,
+            code:201,
+            message:"Attendence recorded succesfully"
+        }
+    }
+    catch (error) {
+        console.error("Error creating new checkin:", error);
+        return {
+          error:true,
+          code:500,
+           message: `Internal Server Error${error}`
+          
+        }
     }
     
 }
@@ -86,18 +130,32 @@ export const checkOut=async(req:Request,res:Response)=>{
             uuid,
         }:checkinCheckoutDateReq=req.body;
         if(!date || !uuid){
-            return res.status(400).json({ error: 'parameters are required in the body' });
-    
+            return{
+                error:true,
+                code:400,
+                message:"Missing required fields"
+            }
         } 
         const timestamp=new Date();
         const query=checkoutQuery;
         const {rows}=await pool.query(query,[timestamp,uuid,date])
-        return res.status(201).json({ message: "Attendence recorded succesfully", user: rows[0] });
+        // return res.status(201).json({ message: "Attendence recorded succesfully", user: rows[0] });
+        return{
+            error:false,
+            code:201,
+            message:"Attendence recorded successfully"
+        }
 
-    } catch (error) {
-        console.error("Error creating user:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
+    } 
+    catch (error) {
+        console.error("Error while updating checkout:", error);
+        return {
+          error:true,
+          code:500,
+           message: `Internal Server Error${error}`
+          
+        }
+    }
 }
 
 export const getTotalAttendenceDetail=async(req:Request,res:Response)=>{
@@ -107,13 +165,23 @@ export const getTotalAttendenceDetail=async(req:Request,res:Response)=>{
         const PreviusLeave=await pool.query(getApprovedLeaveQuery,[user_uuid]);
         const TotalAttendence=[...PresentDates.rows,...PreviusLeave.rows];
         TotalAttendence.sort((record1,record2)=>{
-            return new Date(record2.date).getTime() - new Date(record1.date).getTime();
+            return new Date(record1.date).getTime() - new Date(record2.date).getTime();
         })
-        console.log(TotalAttendence);
-        return res.status(200).json({data:TotalAttendence});
+
+        return{
+            error:false,
+            code:200,
+            message:"Attendence record fetched sucessfully",
+            data:TotalAttendence
+        }
     }
-    catch(error){
-        console.error("Error creating user:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
+    catch (error) {
+        console.error("Error while retriving attendence record", error);
+        return {
+          error:true,
+          code:500,
+           message: `Internal Server Error${error}`
+          
+        }
     }
 }

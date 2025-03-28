@@ -3,7 +3,10 @@ import { getHolidays } from "./controller";
 
 const getHolidaysHandler:RequestHandler=async(req,res,next)=>{
     try {
-        await getHolidays(req,res);
+        const data=await getHolidays(req,res);
+        const statusCode:any=data.code
+        res.status(statusCode).json(data); 
+ 
     } catch (error) {
         next(error);
     }

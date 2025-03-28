@@ -5,10 +5,19 @@ import { getHolidaysQuery } from './query';
 export const getHolidays=async(req:Request,res:Response)=>{
     try{
         const{rows}=await pool.query(getHolidaysQuery);
-        return res.status(200).json({data:rows});
+        return{
+            error:false,
+            code:200,
+            message:"Retrived HOlidays sucessfully",
+            data:rows
+        }
     }
     catch(error){
-        console.error("Error creating user:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
+        console.error("Error in getting list of holidays", error);
+        return{
+          error:true,
+          code:500,
+          message: `Internal Server Error${error}`
+        }
+      }
 }

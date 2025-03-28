@@ -61,11 +61,14 @@ export const getApprovedLeaveQuery=`
                             to_char(start_date,'Mon DD YYYY') as "date",
                             to_char(start_date,'Mon DD YYYY') as "startDate",
                             to_char(end_date,'Mon DD YYYY') as "endDate",
-                            'leave' as type  
+                            case
+                                when leave_type in('CL - 0.5','AL - 0.5','SL - 0.5')  then 'half leave'
+                                else 'leave'
+                            end as type  
                             from
                             leave_data 
                             where 
                             user_uuid=$1 and
-                            status="approved"
+                            status='approved'
                             and start_date<=current_date ;`
 

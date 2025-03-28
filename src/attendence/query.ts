@@ -1,6 +1,6 @@
 export const countAttendence=`SELECT COUNT(DISTINCT date_) 
 FROM attendence 
-WHERE user_uuid = $1;
+WHERE user_uuid = $1 and Extract(month from date_)=Extract(month from current_date) and Extract(Year from date_)=Extract(Year from current_date) ;
 `;
 export const checkIncheckoutDataQuery='select checkin, checkout from attendence where date_=$1 and user_uuid=$2'
 export const toInsertValueToAttendenceTable=`INSERT INTO attendence (user_uuid, date_, checkin)

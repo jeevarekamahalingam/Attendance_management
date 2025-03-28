@@ -7,38 +7,53 @@ import { applyLeave,getAllLeaveForAUser,
 
 const applyLeaveHandler:RequestHandler =async (req,res, next) => {
     try {
-        await applyLeave(req,res);
-    } catch (error) {
-        next(error);
-    }
+       const data= await applyLeave(req,res);
+       const statusCode:any=data.code
+       res.status(statusCode).json(data); 
+
+   } catch (error) {
+       next(error);
+   }
 };
 const getAllLeaveForAUserHandler:RequestHandler =async (req,res, next) => {
     try {
-        await getAllLeaveForAUser(req,res);
-    } catch (error) {
-        next(error);
-    }
+      const data=  await getAllLeaveForAUser(req,res);
+      const statusCode:any=data.code
+      res.status(statusCode).json(data); 
+
+  } catch (error) {
+      next(error);
+  }
 };
 const changeLeaveStatusHandler:RequestHandler =async (req,res, next) => {
     try {
-        await changeLeaveStatus(req,res);
-    } catch (error) {
-        next(error);
-    }
+      const data=  await changeLeaveStatus(req,res);
+      const statusCode:any=data.code
+      res.status(statusCode).json(data); 
+
+  } catch (error) {
+      next(error);
+  }
 };
 const listTeamMeamberRequestHandler:RequestHandler =async (req,res, next) => {
     try {
-        await listTeamMeamberRequest(req,res);
-    } catch (error) {
-        next(error);
-    }
+       const data= await listTeamMeamberRequest(req,res);
+       const statusCode:any=data.code
+       res.status(statusCode).json(data); 
+
+   } catch (error) {
+       next(error);
+   }
 };
 const getALeaveInfoOfAUserByLeaveIDRequestHandler:RequestHandler =async (req,res, next) => {
     try {
-        await getALeaveInfoOfAUserByLeaveID(req,res);
-    } catch (error) {
-        next(error);
-    }
+       const data= await getALeaveInfoOfAUserByLeaveID(req,res);
+       const statusCode:any=data.code
+       res.status(statusCode).json(data); 
+
+   } catch (error) {
+       next(error);
+   }
 };
 
 

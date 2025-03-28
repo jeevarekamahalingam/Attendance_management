@@ -2,15 +2,15 @@ export interface leave{
     id?:number,
     user_uuid:string,
     title?:string,
-    leave_type?:leaveType,
+    leave_type?:leaveTypeEnum,
     start_date?:Date,
     end_date?:Date,
     reason?:string,
-    status?:leaveStatus,
+    status?:leaveStatusEnum,
     approved_by?:string,
     isGreater?:number
 }
-export enum leaveType {
+export enum leaveTypeEnum {
     SL = 'SL',
     AL = 'AL',
     CL = 'CL',
@@ -19,7 +19,7 @@ export enum leaveType {
     SL_HALF = 'SL - 0.5'
   }
   
-  export enum leaveStatus {
+  export enum leaveStatusEnum {
     PENDING = 'pending',
     APPROVED = 'approved',
     REJECTED = 'rejected'

@@ -289,7 +289,7 @@ export const getLeaveStatForAUser=async(req:Request,res:Response)=>{
           return {
             error:true,
             code:400,
-            message:"user id required"
+            message:"user uuid required"
           }
       }
       const {rows}=await pool.query(getLeaveStatForAUserquery,[uuid_]);

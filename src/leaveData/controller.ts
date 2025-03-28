@@ -1,6 +1,6 @@
 import { Request,Response} from "express";
 import pool from "../db";
-import { leave } from "./types";
+import { leave,leaveTypeEnum,leaveStatusEnum } from "./types";
 import {createLeaveQuery,
     getAllLeaveForAUserquery,
     changeLeaveStatusQuery,
@@ -21,7 +21,11 @@ export const applyLeave = async (req: Request, res: Response) => {
       }: leave= req.body;
 
       if (!user_uuid || !title || !leave_type || !start_date || !end_date || !reason ) {
-        return res.status(400).json({ error: "Missing required fields" });
+        return{
+            error:true,
+            code:400,
+            message:"Missing required fields"
+        }
       }
 
       
@@ -42,32 +46,53 @@ export const applyLeave = async (req: Request, res: Response) => {
       
       const { rows } = await pool.query(createLeaveQuery, values);
   
-      return res.status(201).json({ message: "Leave Applied sucessfully", user: rows[0] });
-    } catch (error) {
-      console.error("Error in Leave applying:", error);
-      return res.status(500).json({ error:"Internal Server Error" });
-    }
+      return{
+        error:false,
+        code:201,
+        message:"Leave Applied sucessfully"
+      }
+    }  
+    catch(error){
+        console.error("Error in apllying leave", error);
+        return{
+          error:true,
+          code:500,
+          message: `Internal Server Error${error}`
+        }
+      }
   };
 
 export const getAllLeaveForAUser=async(req: Request, res: Response)=>{
     try{
         const {user_uuid,status,isGreater}:leave=req.body;
         if (!user_uuid) {
-            return res.status(400).json({ error: "Missing required fields" });
+            return{
+                error:true,
+                code:400,
+                message:"Missing required fields"
+            }
           }
+        
         const statusValue = status ?? null;
         const query=getAllLeaveForAUserquery(isGreater);
-          const { rows } = await pool.query(query, [user_uuid,statusValue]);
-          if (rows.length === 0) {
-            return res.status(404).json({ message: 'No data found for this UUID ' });
-          }
+
+        const { rows } = await pool.query(query, [user_uuid,statusValue]);          
           
-          
-          return res.status(200).json({ data: rows });
-    } catch (error) {
-        console.error('Error fetching checkin/checkout:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return {
+            error:false,
+            code:200,
+            message:rows.length!==0?"Retrived Leave data for this user":"No leave data found for this user",
+            data:rows
+        }
     }
+    catch(error){
+        console.error("Error in retriving leave for this user", error);
+        return{
+          error:true,
+          code:500,
+          message: `Internal Server Error${error}`
+        }
+      }
 }
 
 export const changeLeaveStatus=async(req:Request,res:Response)=>{
@@ -77,61 +102,101 @@ export const changeLeaveStatus=async(req:Request,res:Response)=>{
             status
         }:leave=req.body;
         if (!id || !status) {
-            return res.status(400).json({ error: "Missing required fields" });
+            return{
+                error:true,
+                code:400,
+                mmessage:"Missing required fields"
+            }
         }
-        const result=await pool.query(changeLeaveStatusQuery,[status,id]);
-        const user_uuid=result.rows[0].user_uuid;
-        if (status==="approved"){
-            const leaveType=result.rows[0].leave_type;
-            if(leaveType=='SL - 0.5'||leaveType=='AL - 0.5'|| leaveType.trim()=='CL - 0.5'){
+
+        const {rows}=await pool.query(changeLeaveStatusQuery,[status,id]);
+        const{user_uuid}=rows[0]
+        if (status===leaveStatusEnum.APPROVED){
+            const {leaveType}=rows[0]
+            if(leaveType==leaveTypeEnum.SL_HALF ||leaveType==leaveTypeEnum.AL_HALF || leaveType==leaveStatusEnum.REJECTED){
                 await pool.query(halfLeaveQuery,[user_uuid]);
             }
             else{
-                let LeaveDuration=await pool.query(leaveDurationCalculationQuery,[id]);
-                LeaveDuration=LeaveDuration.rows[0].datedifference;      
-                await pool.query(updateLeaveDurationQuery,[user_uuid,LeaveDuration])
+                const {rows}=await pool.query(leaveDurationCalculationQuery,[id]);
+                const{datedifference}=rows[0];
+                await pool.query(updateLeaveDurationQuery,[user_uuid,datedifference])
             }
             
         }
         
-        return res.status(201).json({ message: "Status of Leave changed" });
 
-     
+        return{
+            error:false,
+            code:201,
+            message:"Status of leave changed"
+        }
       
 
-    }catch(error) {
-        console.error('Error fetching checkin/checkout:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
     }
+    catch(error){
+        console.error("Error in chamnging Leave Status", error);
+        return{
+          error:true,
+          code:500,
+          message: `Internal Server Error${error}`
+        }
+      }
 }
 
 export const listTeamMeamberRequest=async(req:Request,res:Response)=>{
     try{
         const{reporting_manager_uuid}=req.params;
         if(!reporting_manager_uuid){
-            return res.status(400).json({error:"Insufficient data"})
+            return {
+                error:true,
+                code:400,
+                message:"Missing required fields"
+            }
         }
+
         const {rows}=await pool.query(listTeamMembersQuery,[reporting_manager_uuid]);
-        return res.status(200).json({data: rows });
+        return{
+            error:false,
+            code:200,
+            message:rows.length!==0?"Retrived list of team member requests":"No leave request Found",
+            data:rows
+        }
 
     }
-    catch(error) {
-        console.error('Error fetching checkin/checkout:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    catch(error){
+        console.error("Error in getting list of team members request", error);
+        return{
+          error:true,
+          code:500,
+          message: `Internal Server Error${error}`
+        }
+      }
 }
 
 export const getALeaveInfoOfAUserByLeaveID=async(req:Request,res:Response)=>{
     try{
         const {leave_id}=req.params;
         if(!leave_id){
-            return res.status(400).json({error:"Insufficient data"})
+            return {
+                error:true,
+                code:400,
+                message:"Missing required fields"
+            }
         }
         const {rows}=await pool.query(getALeaveInfoOfAUserquery,[leave_id]);
-        return res.status(200).json({data: rows });
+        return{
+            error:false,
+            code:200,
+            message:"Retrived Leave Info for requested user",
+            data:rows
+        }
     }
-    catch(error) {
-        console.error('Error fetching checkin/checkout:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    catch(error){
+        console.error("Error in  retriving leave details of a user", error);
+        return{
+          error:true,
+          code:500,
+          message: `Internal Server Error${error}`
+        }
+      }
 }

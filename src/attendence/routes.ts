@@ -2,28 +2,40 @@ import { RequestHandler, Router } from "express";
 import {getAttendenceCount,getCheckinCheckout,newCheckin,checkOut,getTotalAttendenceDetail} from './controller'
 const countAttendenceHandler:RequestHandler =async (req,res, next) => {
     try {
-        await getAttendenceCount(req,res);
+        const data=await getAttendenceCount(req,res);
+        const statusCode:any=data.code
+        res.status(statusCode).json(data); 
+ 
     } catch (error) {
         next(error);
     }
 };
 const checkinCheckoutHandler:RequestHandler =async (req,res, next) => {
     try {
-        await getCheckinCheckout(req,res);
+        const data=await getCheckinCheckout(req,res);
+        const statusCode:any=data.code
+        res.status(statusCode).json(data); 
+ 
     } catch (error) {
         next(error);
     }
 };
 const newCheckinHandler:RequestHandler =async (req,res, next) => {
     try {
-        await newCheckin(req,res);
+        const data=await newCheckin(req,res);
+        const statusCode:any=data.code
+        res.status(statusCode).json(data); 
+ 
     } catch (error) {
         next(error);
     }
 };
 const checkoutHandler:RequestHandler=async(req,res,next)=>{
     try {
-        await checkOut(req,res);
+        const data=await checkOut(req,res);
+        const statusCode:any=data.code
+        res.status(statusCode).json(data); 
+ 
     } catch (error) {
         next(error);
     }
@@ -31,10 +43,13 @@ const checkoutHandler:RequestHandler=async(req,res,next)=>{
 
 const getTotalAttendenceDetailHandler:RequestHandler=async(req,res,next)=>{
     try {
-        await getTotalAttendenceDetail(req,res);
-    } catch (error) {
-        next(error);
-    }
+       const data= await getTotalAttendenceDetail(req,res);
+       const statusCode:any=data.code
+       res.status(statusCode).json(data); 
+
+   } catch (error) {
+       next(error);
+   }
 }
 const attendenceRoute = Router();
 attendenceRoute.get('/countAttendence/:user_uuid',countAttendenceHandler);
