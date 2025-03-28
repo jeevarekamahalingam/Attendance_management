@@ -1,4 +1,3 @@
-import { Request,Response} from "express";
 import pool from "../db";
 import {getRolesQuery} from "./query"
 import { APIresponse } from "../type";

@@ -13,7 +13,6 @@ export const getAttendenceCount=async(req:Request,res:Response):Promise<APIrespo
         const query=countAttendence;
         const {rows}=await pool.query(query,[user_uuid]);
         if (rows.length==0){
-            // res.status(404).json({message:'No data found'});
             return{
                 error:true,
                 code:404,
@@ -29,7 +28,6 @@ export const getAttendenceCount=async(req:Request,res:Response):Promise<APIrespo
         const workingDays = workingData[0][monthName];
     
         rows[0].workingDays = workingDays;
-        // return res.status(200).json({ data: rows });
         return {
             error:false,
             code:200,
@@ -64,11 +62,7 @@ export const getCheckinCheckout=async(req:Request, res:Response):Promise<APIresp
     }
     const query=checkIncheckoutDataQuery;
     const {rows}=await pool.query(query,[date,uuid]);
-    // if (rows.length === 0) {
-    //     return res.status(404).json({ message: 'No data found for this UUID and date' });
-    //   }
-  
-    //   return res.status(200).json({ data: rows[0] });
+
       return{
         error:false,
         code:200,
@@ -140,7 +134,6 @@ export const checkOut=async(req:Request,res:Response):Promise<APIresponse>=>{
         const timestamp=new Date();
         const query=checkoutQuery;
         const {rows}=await pool.query(query,[timestamp,uuid,date])
-        // return res.status(201).json({ message: "Attendence recorded succesfully", user: rows[0] });
         return{
             error:false,
             code:201,
