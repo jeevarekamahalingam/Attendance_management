@@ -1,5 +1,6 @@
 export const createLeaveQuery=  `INSERT INTO leave_data (user_uuid, title, leave_type, start_date,end_date,reason,reporting_manager_uuid,applied_date)
 values($1,$2,$3,$4,$5,$6,$7,$8)`
+
 export const getAllLeaveForAUserquery=(isGreater: number | undefined):string=> {
     const comparator = isGreater===1 ? '<=' : '>=';
     const comparator1=isGreater===1 ? '>' : '<=';
@@ -30,7 +31,9 @@ export const getAllLeaveForAUserquery=(isGreater: number | undefined):string=> {
 }
 
 export const changeLeaveStatusQuery=`update leave_data set status=$1 where id=$2 returning *`;
+
 export const leaveDurationCalculationQuery=`SELECT end_date-start_date as DateDifference from leave_data where id=$1 `
+
 export const listTeamMembersQuery=`
                 select
                     l.id as "leaveId",
@@ -42,6 +45,7 @@ export const listTeamMembersQuery=`
                     l.reporting_manager_uuid=$1
                     and
                     l.status='pending';`
+
 export const getALeaveInfoOfAUserquery=`
                 select 
                     l.title as "title",

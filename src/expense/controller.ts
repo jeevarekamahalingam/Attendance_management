@@ -2,8 +2,9 @@ import { Request,Response} from "express";
 import pool from "../db";
 import { Expense } from "./type";
 import { claimExpenseQuery,getClaimRecordsQuery,getExpenseStatQuery } from "./query";
+import { APIresponse } from "../type";
 
-export const claimExpense=async(req:Request,res:Response)=>{
+export const claimExpense=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
         const{
             user_uuid,
@@ -47,7 +48,7 @@ export const claimExpense=async(req:Request,res:Response)=>{
     }
 }
 
-export const  getClaimRecords=async(req:Request,res:Response)=>{
+export const  getClaimRecords=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
         const{
             user_uuid,
@@ -81,7 +82,7 @@ export const  getClaimRecords=async(req:Request,res:Response)=>{
         }
     }
 }
-export const getExpenseStat=async(req:Request,res:Response)=>{
+export const getExpenseStat=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
         const{
             user_uuid,

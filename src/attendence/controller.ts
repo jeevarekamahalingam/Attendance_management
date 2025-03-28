@@ -5,8 +5,9 @@ import fs from'fs';
 import path from 'path';
 import {checkinCheckoutDateReq} from './types' 
 import {getApprovedLeaveQuery} from '../leaveData/query'
+import { APIresponse } from '../type';
 
-export const getAttendenceCount=async(req:Request,res:Response)=>{
+export const getAttendenceCount=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
         const {user_uuid}=req.params;
         const query=countAttendence;
@@ -47,7 +48,7 @@ export const getAttendenceCount=async(req:Request,res:Response)=>{
     }
 }
 
-export const getCheckinCheckout=async(req:Request, res:Response)=>{
+export const getCheckinCheckout=async(req:Request, res:Response):Promise<APIresponse>=>{
     try{
     const {
         date,
@@ -87,7 +88,7 @@ export const getCheckinCheckout=async(req:Request, res:Response)=>{
     
 }
 
-export const newCheckin=async(req:Request,res:Response)=>{
+export const newCheckin=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
      
         const {
@@ -122,7 +123,7 @@ export const newCheckin=async(req:Request,res:Response)=>{
     
 }
 
-export const checkOut=async(req:Request,res:Response)=>{
+export const checkOut=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
      
         const {
@@ -158,7 +159,7 @@ export const checkOut=async(req:Request,res:Response)=>{
     }
 }
 
-export const getTotalAttendenceDetail=async(req:Request,res:Response)=>{
+export const getTotalAttendenceDetail=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
         const {user_uuid}=req.params;
         const PresentDates=await pool.query(getAttendenceDetailQuery,[user_uuid]);

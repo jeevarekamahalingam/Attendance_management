@@ -10,8 +10,9 @@ import {isUUIDpresentQuery ,
   getListOfReportingManagersQuery,
   updateUsersQuery } from "./queries";
 import { User,userEditData } from "./types";
+import { APIresponse } from "../type";
 
-export const isUUIDpresent=async(req:Request,res:Response)=>{
+export const isUUIDpresent=async(req:Request,res:Response):Promise<APIresponse>=>{
   try {
     const { uuid } = req.params;
 
@@ -52,7 +53,7 @@ export const isUUIDpresent=async(req:Request,res:Response)=>{
 }
 
 
-export const getUserDetail=async(req:Request,res:Response)=>{
+export const getUserDetail=async(req:Request,res:Response):Promise<APIresponse>=>{
   try{
     const {uuid}=req.params;
 
@@ -100,7 +101,7 @@ export const getUserDetail=async(req:Request,res:Response)=>{
 }
 
 
-export const getTeamMembers = async (req: Request) => {
+export const getTeamMembers = async (req: Request):Promise<APIresponse> => {
   try{
     const { uuid } = req.params;
 
@@ -141,7 +142,7 @@ export const getTeamMembers = async (req: Request) => {
 };
 
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response):Promise<APIresponse> => {
     try {
       const {
         uuid_,
@@ -196,7 +197,7 @@ export const createUser = async (req: Request, res: Response) => {
   };
 
 
-export const updateUserByUser=async(req:Request,res:Response)=>{
+export const updateUserByUser=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
         const {
             uuid_,
@@ -240,7 +241,7 @@ export const updateUserByUser=async(req:Request,res:Response)=>{
 
 
 
-export const updateUserByHR=async(req:Request,res:Response)=>{
+export const updateUserByHR=async(req:Request,res:Response):Promise<APIresponse>=>{
   try{
       const {
           uuid_,
@@ -282,7 +283,7 @@ export const updateUserByHR=async(req:Request,res:Response)=>{
 }
 
 
-export const getLeaveStatForAUser=async(req:Request,res:Response)=>{
+export const getLeaveStatForAUser=async(req:Request,res:Response):Promise<APIresponse>=>{
   try{
       const {uuid_}=req.params;
       if(!uuid_){
@@ -311,7 +312,7 @@ export const getLeaveStatForAUser=async(req:Request,res:Response)=>{
   }
 }
 
-export const getListOfReportingManagers=async(req:Request,res:Response)=>{
+export const getListOfReportingManagers=async():Promise<APIresponse>=>{
   try{
     const{rows}=await pool.query(getListOfReportingManagersQuery);
     return {

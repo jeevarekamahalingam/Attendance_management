@@ -3,9 +3,9 @@ import { getHolidays } from "./controller";
 
 const getHolidaysHandler:RequestHandler=async(req,res,next)=>{
     try {
-        const data=await getHolidays(req,res);
-        const statusCode:any=data.code
-        res.status(statusCode).json(data); 
+        const result=await getHolidays();
+        const statusCode:any=result.code
+        res.status(statusCode).json(result); 
  
     } catch (error) {
         next(error);

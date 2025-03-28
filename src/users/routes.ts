@@ -10,9 +10,9 @@ import {isUUIDpresent ,
 
 const isUUIDpresentHandler:RequestHandler =async (req,res, next) => {
     try {
-        const data=await isUUIDpresent(req,res);
-        const statusCode:any=data.code
-        res.status(statusCode).json(data); 
+        const result=await isUUIDpresent(req,res);
+        const statusCode:any=result.code
+        res.status(statusCode).json(result); 
 
     } catch (error) {
         next(error);
@@ -23,47 +23,43 @@ const getUserDetailHandler:RequestHandler=async(req,res,next)=>{
 
     
     try{
-       const data=await getUserDetail(req,res);
-       const statusCode:any=data.code
-       res.status(statusCode).json(data); 
-    }
-    catch(error){
-        console.log(error);
+       const result=await getUserDetail(req,res);
+       const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
         next(error);
     }
 }
 
 const retriveTeamMembers:RequestHandler =async (req, res, next) => {
     try {
-        const data = await getTeamMembers(req);
-        const statusCode:any=data.code
-        res.status(statusCode).json(data); 
-    }
-    catch(error){
-        console.log(error);
+        const result = await getTeamMembers(req);
+        const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
         next(error);
     }
 };
 const createNewUser:RequestHandler=async(req,res,next)=>{
     try {
-        const data = await createUser(req,res);
-        const statusCode:any=data.code
-        res.status(statusCode).json(data); 
-    }
-    catch(error){
-        console.log(error);
+        const result = await createUser(req,res);
+        const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
         next(error);
     }
 }
 
 const updateUserByUserHandler:RequestHandler=async(req,res,next)=>{
     try {
-        const data = await updateUserByUser(req,res);
-        const statusCode:any=data.code
-        res.status(statusCode).json(data); 
-    }
-    catch(error){
-        console.log(error);
+        const result = await updateUserByUser(req,res);
+        const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
         next(error);
     }
 }
@@ -71,34 +67,31 @@ const updateUserByUserHandler:RequestHandler=async(req,res,next)=>{
 
 const updateUserByHRrHandler:RequestHandler=async(req,res,next)=>{
     try {
-        const data = await updateUserByHR(req,res);
-        const statusCode:any=data.code
-        res.status(statusCode).json(data); 
-    }
-    catch(error){
-        console.log(error);
+        const result = await updateUserByHR(req,res);
+        const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
         next(error);
     }
 }
 const getLeaveStatForAUserRequestHandler:RequestHandler =async (req,res, next) => {
     try {
-        const data=await getLeaveStatForAUser(req,res);
-        const statusCode:any=data.code
-        res.status(statusCode).json(data); 
-    }
-    catch(error){
-        console.log(error);
+        const result=await getLeaveStatForAUser(req,res);
+        const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
         next(error);
     }
 };
 const getListOfReportingManagersRequestHandler:RequestHandler =async (req,res, next) => {
     try {
-        const data=await getListOfReportingManagers(req,res);
-        const statusCode:any=data.code
-        res.status(statusCode).json(data); 
-    }
-    catch(error){
-        console.log(error);
+        const result=await getListOfReportingManagers();
+        const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
         next(error);
     }
 };

@@ -7,53 +7,53 @@ import { applyLeave,getAllLeaveForAUser,
 
 const applyLeaveHandler:RequestHandler =async (req,res, next) => {
     try {
-       const data= await applyLeave(req,res);
-       const statusCode:any=data.code
-       res.status(statusCode).json(data); 
-
-   } catch (error) {
-       next(error);
-   }
+       const result= await applyLeave(req,res);
+       const statusCode:any=result.code
+       res.status(statusCode).json(result); 
+ 
+    } catch (error) {
+        next(error);
+    }
 };
 const getAllLeaveForAUserHandler:RequestHandler =async (req,res, next) => {
     try {
-      const data=  await getAllLeaveForAUser(req,res);
-      const statusCode:any=data.code
-      res.status(statusCode).json(data); 
-
-  } catch (error) {
-      next(error);
-  }
+      const result=  await getAllLeaveForAUser(req,res);
+      const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
+        next(error);
+    }
 };
 const changeLeaveStatusHandler:RequestHandler =async (req,res, next) => {
     try {
-      const data=  await changeLeaveStatus(req,res);
-      const statusCode:any=data.code
-      res.status(statusCode).json(data); 
-
-  } catch (error) {
-      next(error);
-  }
+      const result=  await changeLeaveStatus(req,res);
+      const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
+        next(error);
+    }
 };
 const listTeamMeamberRequestHandler:RequestHandler =async (req,res, next) => {
     try {
-       const data= await listTeamMeamberRequest(req,res);
-       const statusCode:any=data.code
-       res.status(statusCode).json(data); 
-
-   } catch (error) {
-       next(error);
-   }
+       const result= await listTeamMeamberRequest(req,res);
+       const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
+        next(error);
+    }
 };
 const getALeaveInfoOfAUserByLeaveIDRequestHandler:RequestHandler =async (req,res, next) => {
     try {
-       const data= await getALeaveInfoOfAUserByLeaveID(req,res);
-       const statusCode:any=data.code
-       res.status(statusCode).json(data); 
-
-   } catch (error) {
-       next(error);
-   }
+       const result= await getALeaveInfoOfAUserByLeaveID(req,res);
+       const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
+        next(error);
+    }
 };
 
 

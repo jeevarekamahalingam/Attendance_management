@@ -8,8 +8,9 @@ import {createLeaveQuery,
     listTeamMembersQuery,
     getALeaveInfoOfAUserquery} from './query';
 import {getReportingManagerByUserUUID,updateLeaveDurationQuery,halfLeaveQuery} from '../users/queries'
+import { APIresponse } from "../type";
 
-export const applyLeave = async (req: Request, res: Response) => {
+export const applyLeave = async (req: Request, res: Response):Promise<APIresponse> => {
     try {
       const {
         user_uuid,
@@ -62,7 +63,7 @@ export const applyLeave = async (req: Request, res: Response) => {
       }
   };
 
-export const getAllLeaveForAUser=async(req: Request, res: Response)=>{
+export const getAllLeaveForAUser=async(req: Request, res: Response):Promise<APIresponse>=>{
     try{
         const {user_uuid,status,isGreater}:leave=req.body;
         if (!user_uuid) {
@@ -95,7 +96,7 @@ export const getAllLeaveForAUser=async(req: Request, res: Response)=>{
       }
 }
 
-export const changeLeaveStatus=async(req:Request,res:Response)=>{
+export const changeLeaveStatus=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
             const {
             id,
@@ -105,7 +106,7 @@ export const changeLeaveStatus=async(req:Request,res:Response)=>{
             return{
                 error:true,
                 code:400,
-                mmessage:"Missing required fields"
+                message:"Missing required fields"
             }
         }
 
@@ -143,7 +144,7 @@ export const changeLeaveStatus=async(req:Request,res:Response)=>{
       }
 }
 
-export const listTeamMeamberRequest=async(req:Request,res:Response)=>{
+export const listTeamMeamberRequest=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
         const{reporting_manager_uuid}=req.params;
         if(!reporting_manager_uuid){
@@ -173,7 +174,7 @@ export const listTeamMeamberRequest=async(req:Request,res:Response)=>{
       }
 }
 
-export const getALeaveInfoOfAUserByLeaveID=async(req:Request,res:Response)=>{
+export const getALeaveInfoOfAUserByLeaveID=async(req:Request,res:Response):Promise<APIresponse>=>{
     try{
         const {leave_id}=req.params;
         if(!leave_id){

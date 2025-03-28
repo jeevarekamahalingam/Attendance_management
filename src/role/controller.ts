@@ -1,8 +1,9 @@
 import { Request,Response} from "express";
 import pool from "../db";
 import {getRolesQuery} from "./query"
+import { APIresponse } from "../type";
 
-export const getRoles=async(req:Request,res:Response)=>{
+export const getRoles=async():Promise<APIresponse>=>{
     try{
         const {rows}=await pool.query(getRolesQuery);
         return{

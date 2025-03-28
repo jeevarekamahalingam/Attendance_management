@@ -3,14 +3,13 @@ import { getRoles } from "./controller";
 
 const getRolesHandler:RequestHandler =async (req,res, next) => {
     try {
-       const data= await getRoles(req,res);
-       const statusCode:any=data.code
-       res.status(statusCode).json(data); 
-   }
-   catch(error){
-       console.log(error);
-       next(error);
-   }
+       const result= await getRoles();
+       const statusCode:any=result.code
+        res.status(statusCode).json(result); 
+ 
+    } catch (error) {
+        next(error);
+    }
 };
 
 const roleRoute=Router();

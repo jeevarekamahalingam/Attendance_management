@@ -27,6 +27,7 @@ export const getClaimRecordsQuery=()=>{
                 and 
                 status=$2;`
 }
+
 export const getExpenseStatQuery=()=>{
     return` select
                 sum(case

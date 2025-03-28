@@ -1,8 +1,8 @@
 import pool from '../db';
-import {Request, Response} from 'express';
 import { getHolidaysQuery } from './query'; 
+import { APIresponse } from '../type';
 
-export const getHolidays=async(req:Request,res:Response)=>{
+export const getHolidays=async():Promise<APIresponse>=>{
     try{
         const{rows}=await pool.query(getHolidaysQuery);
         return{
